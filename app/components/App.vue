@@ -41,7 +41,7 @@ export default {
             data() {
          
     return {
-        saveToGallery: true,
+        saveToGallery: false,
         allowsEditing: false,
         keepAspectRatio: true,
         width: 320,
