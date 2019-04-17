@@ -11,7 +11,7 @@
                     </v-template>
                 </ListView>
                     <Button text="login" class="loginBtn" marginTop="20" @tap="onTakePictureTap"></Button>
-                    <Button text="Get from URL" @tap="callAPI"/>
+                    <Button text="Get from URL" @tap="httpPost"/>
                     <Button text="Post JSON" @tap="axss" />
                 </StackLayout>
             </ScrollView>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { Image } from "tns-core-modules/ui/image";
 import * as Toast from 'nativescript-toast';
 import {
     EventData,
@@ -47,47 +48,30 @@ export default {
         width: 320,
         height: 240,
         cameraImage: null,
-        labelText: ""
+        labelText: "",
+        
 
     };
         },
         methods:{
-            callAPI(){
-                console.log("POST");
-                http.request({
-                url: "https://api.faceid.com/faceid/v1/detect",
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                content: JSON.stringify({
-                api_key: "TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL",
-                api_secret: "xi7A2zpmMJmDb0jKsb2H5o-8-V4OMij2",
-                image:"https://dxs1x0sxlq03u.cloudfront.net/sites/default/files/article-image/eminence-organics-acne-face-mapping.jpg"
-            })
-            }).then(response => {
-            var result = response.content.toJSON();
-            console.log("Response from FacePP");
-            console.log(result)
-            Toast.makeText(JSON.stringify(result.error)).show();
-            }, error => {
-                console.error(error);
-                });
-            },
-                apiPost(){
-                http.request({
-                url: "https://api.megvii.com/faceid/v3/sdk/verify",
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+                httpPost(){
+                    
+                    http.request({
+                    url: "https://api-us.faceplusplus.com/facepp/v3/detect?" + "api_key=rI18RJ9w1VEfy5inc1WSLzwRDefmKJAb&api_secret=xi7A2zpmMJmDb0jKsb2H5o-8-V4OMij2&" +"image_file="+ imagetry,
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
                     content: JSON.stringify({
-                        api_key: "TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL",
-                        api_secret: "CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i",
-                        image:"https://dxs1x0sxlq03u.cloudfront.net/sites/default/files/article-image/eminence-organics-acne-face-mapping.jpg"
                     })
-                }).then(response => {
-                    var result = response.content.toJSON();
+                    }).then(response => {
+                        var result = response.content.toJSON();
+                      
+                         console.log(result);
                     }, error => {
-            console.error(error);
-            });
-        },
+                         console.error(error);
+                    });            
+
+
+                },
                 onTakePictureTap: function(args) {
                     let page = args.object.page;
                     let that = this;
@@ -105,26 +89,27 @@ export default {
                                         let scale = 1;
                                         let actualWidth = 0;
                                         let actualHeight = 0;
-                                        console.log(imageAsset.android);
+                                        console.log("image asset starts here");
+                                        console.log(imageAsset);
+                                        console.log("image asset ends here");
 
                                         //API Starts here
                                         http.request({
-                                        url: "https://api.faceid.com/faceid/v1/detect",
+                                        //url: "https://api.faceid.com/faceid/v1/detect?" + "api_key=TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL&api_secret=CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i&image=" +image ,
+                                        url: "https://api-us.faceplusplus.com/facepp/v3/detect?" + "api_key=pVTnnGdMYsm-GwF_3H5_i3_ipWt_yVH6&api_secret=RFO_epb-CWeP9iBYsGumZr5ixLF1OjMq&image_base64=" +imageAsset,
                                         method: "POST",
                                         headers: { "Content-Type": "application/json" },
                                         content: JSON.stringify({
-                                            api_key: "TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL",
-                                            api_secret: "CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i",
-                                            image: imageAsset}) //Image from camera > to API
+                                        })
                                         }).then(response => {
-                                        var result = response.content.toJSON();
-                                        
-                                        console.log("after saving start for photo verify");
-                                        console.log(result); 
-                                        Toast.makeText(JSON.stringify(result.error),"long").show();
+                                            var result = response.content.toJSON();
+                                            console.log("results starts here");
+                                            console.log(result);
+                                            console.log("results ends here");
                                         }, error => {
-                                console.error(error);
-                                });
+                                            console.error(error);
+                                        });
+                                        
                                         //ENDS HERE
 
 
@@ -153,22 +138,22 @@ export default {
 
         },
             mounted() { 
-                console.log("POST from Mounted");
-                http.request({
-                url: "https://api-us.faceplusplus.com/facepp/v3/detect",
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                content: JSON.stringify({
-                api_key: "rI18RJ9w1VEfy5inc1WSLzwRDefmKJAb",
-                api_secret: "xi7A2zpmMJmDb0jKsb2H5o-8-V4OMij2",
-                image:"https://dxs1x0sxlq03u.cloudfront.net/sites/default/files/article-image/eminence-organics-acne-face-mapping.jpg",
-                multi_oriented_detection: 1
-                })
-            }).then(response => {
-                var result = response.content.toJSON();
-            }, error => {
-                console.error(error);
-            });
+            //     console.log("POST from Mounted");
+            //     http.request({
+            //     url: "https://api-us.faceplusplus.com/facepp/v3/detect",
+            //     method: "POST",
+            //     headers: { "Content-Type": "application/json" },
+            //     content: JSON.stringify({
+            //     api_key: "rI18RJ9w1VEfy5inc1WSLzwRDefmKJAb",
+            //     api_secret: "xi7A2zpmMJmDb0jKsb2H5o-8-V4OMij2",
+            //     image:"https://dxs1x0sxlq03u.cloudfront.net/sites/default/files/article-image/eminence-organics-acne-face-mapping.jpg",
+            //     multi_oriented_detection: 1
+            //     })
+            // }).then(response => {
+            //     var result = response.content.toJSON();
+            // }, error => {
+            //     console.error(error);
+            // });
         }
     };
 
