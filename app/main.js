@@ -1,7 +1,7 @@
 import Vue from 'nativescript-vue'
 //import App from './components/App'
 //import Kinvey from './components/Kinvey'
-import Cam from './components/Cam'
+import Axios from './components/Axios'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
@@ -14,5 +14,5 @@ Vue.use(VueAxios, axios)
 Vue.config.silent = (TNS_ENV === 'production')
 
 new Vue({
-render: h => h('frame', [h(Cam)])
+render: h => h('frame', [h(Axios)])
 }).$start()
