@@ -16,7 +16,7 @@ import * as axios from "axios/dist/axios";
 import * as imageSource from "tns-core-modules/image-source";
 import * as camera from "nativescript-camera";
 import * as Toast from 'nativescript-toast';
-const enums = require("ui/enums");
+
 export default {
     data() {
         return {
@@ -35,7 +35,7 @@ export default {
         takePicture(){
         camera.requestPermissions();
             camera                
-                .takePicture({ width: 25, height: 25, keepAspectRatio: false })
+                .takePicture({ width: 25, height: 25, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
                 .then(imageAsset => {
                     this.pictureAxios = imageAsset;
                     let source = new imageSource.ImageSource();
@@ -56,7 +56,7 @@ export default {
                 })
                     }).then(response => {
                         var result = response.content.toJSON();
-                        console.log("results starts here");``
+                        console.log("results starts here");
                         console.log(result);
                         console.log("results ends here");
                         Toast.makeText(result, "long").show();
