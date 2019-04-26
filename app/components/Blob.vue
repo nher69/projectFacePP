@@ -5,34 +5,22 @@
                 <StackLayout class="home-panel">
             
                     <Button text="login" class="loginBtn" marginTop="20" @tap="onTakePictureTap"></Button>
-                    <Button text="Get from URL" @tap="request"/>
-                    <Button text="Post JSON" @tap="postHTTP" />
+                   
                 </StackLayout>
             </ScrollView>
     </Page>
 
-    <!-- <Page class="page">
-        <ActionBar class="action-bar" title="axios"></ActionBar>
-        <GridLayout>
-            <ListView for="p in dataResults" class="list-group">
-                <v-template>
-                    <StackLayout class="list-group-item">
-                        <Label :text="p.name" />
-                        <Button text="Get from URL" @tap="callAPI"/>
-                    </StackLayout>
-                </v-template>
-            </ListView>
-        </GridLayout>
-    </Page> -->
+   
 </template>
 
 
 <script>
-
-
+import { NativeScriptAzureStorage } from 'nativescript-azure-storage';
+let azureStorage = new NativeScriptAzureStorage(this.azureStorageConnectionString);
 import * as Toast from 'nativescript-toast';
 import * as http from "http";
 import axios from "axios";
+
   export default {
     data() {
       return {

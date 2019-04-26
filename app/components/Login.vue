@@ -10,11 +10,16 @@
 </template>
 
 <script>
+const bgHttp = require("nativescript-background-http");
+const fs = require("file-system");
+import * as FormData from 'form-data';
 import * as http from "http";
 import * as axios from "axios/dist/axios";
 import * as imageSource from "tns-core-modules/image-source";
 import * as camera from "nativescript-camera";
 import * as Toast from 'nativescript-toast';
+import { createReadStream } from 'fs';
+
 
 export default {
     data() {
@@ -22,49 +27,67 @@ export default {
             pictureFromCamera: null,
             textPicture: "Take a Picture",
             pictureBase64String : null,
-            pictureAxios : null,
+            imageFile : null,
             wtf: "api call",
+            file: null,
             facePPURL: 'https://api-us.faceplusplus.com/facepp/v3/detect?',
             api_key: 'api_key=staqi4c1MY8Ilev0xI1jbWc1UsqWk-Uw&',
-            api_secret: 'api_secret=C3ArAl6Y0OUzgu1BAAUqsWcGqkuOdpC1&image_base64='        
+            api_secret: 'api_secret=C3ArAl6Y0OUzgu1BAAUqsWcGqkuOdpC1&image_base64='
         };
     },
     methods: {
         takePicture(){
         camera.requestPermissions();
             camera                
-                .takePicture({ width: 25, height: 25, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
+                .takePicture({ width: 300, height: 300, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
                 .then(imageAsset => {
-                    this.pictureAxios = imageAsset;
+                    this.imageFile = imageAsset;
                     let source = new imageSource.ImageSource();
                     source.fromAsset(imageAsset).then(source => {
                     this.pictureBase64String = source.toBase64String("jpeg", 20);
                     console.log(this.pictureBase64String);
-                //HTTP request HERE
-                console.log("http here");
-                console.log(source.toBase64String("jpeg", 20));
-           
-                http.request({
-                //url: "https://api.faceid.com/faceid/v1/detect?" + "api_key=TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL&api_secret=CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i&image=" +source,
-                url: this.facePPURL + this.api_key + this.api_secret + this.pictureBase64String,                           
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                content: JSON.stringify({
-        
-                })
-                    }).then(response => {
-                        var result = response.content.toJSON();
-                        console.log("results starts here");
-                        console.log(result);
-                        console.log("results ends here");
-                   
-                   
-                    }, error => {
-                        console.error(error);
-                    }); 
-            //ENDS HERE    
+                                
+                    //HTTP request HERE
+                            http.request({
+                            url: "https://api.faceid.com/faceid/v1/detect?" + "api_key=TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL&api_secret=CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i",
+                            data:{image: imageAsset},
+                            method: "POST",
+                            headers: { 
+                                "Content-Type": 'multipart/form-data'
+                            },
+                            content: {
+                                "image": this.pictureFromCamera
+                            }
+                            }).then(response => {
+                                
+                                var result = response.content.toJSON();
+                                console.log("results starts here");
+                                console.log(result);
+                                console.log("results ends here");
+                            }, error => {
+                                console.error(error);
+                            }); 
+                        //ENDS HERE  
+
+                      //     axios({
+                //             method: "post",
+                //             url: "https://api.faceid.com/faceid/v1/detect?" + "api_key=TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL&api_secret=CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i",
+                //             data: 'image'+ data,
+                //             headers : {"Content-Type":" multipart/form-data"}      
+                //           })
+                //     .then(response => {
+                //                      var result = response.data;
+                //                      console.log(result);
+                //                  }, error => {
+                //                     console.error(error);
+                //                  });
+                // }) 
+
+
+
+
                     });
-                })    
+               })    
         },
         apiCall(){
             Toast.makeText("Hello World", "long").show();
