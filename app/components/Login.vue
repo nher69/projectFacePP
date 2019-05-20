@@ -32,49 +32,56 @@ export default {
     data() {
         return {
             pictureFromCamera: null,
-            textPicture: "Take a Picture",
+            textPicture: "Open Camera",
             pictureBase64String : null,
             imageFile : null,
-            wtf: "api call",
+            wtf: "Kairos",
             file: null,
             facePPURL: 'https://api-us.faceplusplus.com/facepp/v3/detect?',
             api_key: 'api_key=staqi4c1MY8Ilev0xI1jbWc1UsqWk-Uw&',
             api_secret: 'api_secret=C3ArAl6Y0OUzgu1BAAUqsWcGqkuOdpC1&image_base64=',
             textFieldPicture: '',
-            image:''
+            image:'',
+            kHeaders: {
+                        "Content-type"    : "application/json",
+	                    "app_id"          : "0ce68448",
+	                    "app_key"         : "985bb714733e3845e162bee42273d78b"},
+            kurl: "http://api.kairos.com/detect"
         };
     },
     methods: {
         takePicture(){
         camera.requestPermissions();
             camera                
-                .takePicture({ width: 300, height: 300, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
+                .takePicture({ width: 1024, height: 1024, keepAspectRatio: true, saveToGallery: false, cameraFacing: 'front' })
                 .then(imageAsset => {
+
+                    //Original
                     this.image = imageAsset.android;
-                  
                     let source = new imageSource.ImageSource();
                     source.fromAsset(imageAsset).then(source => {
-                    this.pictureBase64String = source.toBase64String(enums.ImageFormat.jpg);
-        
+                    this.pictureBase64String = source.toBase64String('jpeg', 20);
                     console.log(this.pictureBase64String);
                     console.log(imageAsset);
                     Toast.makeText(this.pictureBase64String, "long").show();
                     let fd = new FormData();
                     fd.append('image', this.image)            
-                    console.log(fd);
-
-                   //HTTP request HERE
+                    console.log(pictureBase64String);
                     
-                            http.request({
-                            url: "https://api.faceid.com/faceid/v1/detect?api_key=TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL&api_secret=CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i",
-                            data: fd,
+                    var headers = {
+	                    "Content-type"    : "application/json",
+	                    "app_id"          : "0ce68448",
+	                    "app_key"         : "985bb714733e3845e162bee42273d78b"
+                        };
+
+                    var payload  = { "image" : this.pictureBase64String };
+  
+            
+                    http.request({
+                            url: kurl,
                             method: "POST",
-                            headers: { 
-                                "Content-Type": 'multipart/form-data '
-                            },
-                            content: {
-                               
-                            }
+                            headers: kHeaders,
+                            data: JSON.stringify(payload)
                             }).then(response => {
                                 var result = response.content.toJSON();
                                 console.log("results starts here");
@@ -83,12 +90,33 @@ export default {
                             }, error => {
                                 console.error(error);
                             }); 
-                        //ENDS HERE  
+
+                //    //HTTP request HERE
+                //    //FacePP
+                //             http.request({
+                //             url: "https://api.faceid.com/faceid/v1/detect?api_key=TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL&api_secret=CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i",
+                //             data: fd,
+                //             method: "POST",
+                //             headers: { 
+                //                 "Content-Type": 'multipart/form-data '
+                //             },
+                //             content: {
+                               
+                //             }
+                //             }).then(response => {
+                //                 var result = response.content.toJSON();
+                //                 console.log("results starts here");
+                //                 console.log(result);
+                //                 console.log("results ends here");
+                //             }, error => {
+                //                 console.error(error);
+                //             }); 
+                //         //ENDS HERE  
                     });
                })    
         },
         apiCall(){
-            Toast.makeText("Hello World", "long").show();
+            Toast.makeText("Kairos", "long").show();
             const fd = new FormData();
             fd.append('image', this.imageFile, this.imageFile.name)
             axios.post('https://api.faceid.com/faceid/v1/detect?api_key=TEHWc-8gNFqinV-470D3Uh0Z-3teYxxL&api_secret=CrziqRzjXTVuhU4vjV7IxFNij2HNhE8i',fd)
