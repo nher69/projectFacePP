@@ -1,7 +1,7 @@
 import Vue from 'nativescript-vue'
 //import App from './components/App'
 //import Kinvey from './components/Kinvey'
-import Login from './components/Login'
+import Home from './components/Home'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
@@ -14,5 +14,5 @@ Vue.use(VueAxios, axios)
 Vue.config.silent = (TNS_ENV === 'production')
 
 new Vue({
-render: h => h('frame', [h(Login)])
+render: h => h('frame', [h(Home)])
 }).$start()
