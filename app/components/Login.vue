@@ -137,7 +137,8 @@ export default {
                                 var result = response.content.toJSON();
                                
                                 console.log("results starts here");
-                                console.log(JSON.stringify(result.image.subject_id));
+                                console.log(JSON.stringify(result));
+                                console.log(JSON.stringify(response.content.face_id));
                                 // console.log("results ends here");
                                 Toast.makeText("Hi!, "+ result, "long").show();
                             }, error => {
