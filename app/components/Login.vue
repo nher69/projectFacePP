@@ -5,9 +5,9 @@
         <StackLayout>
             <TextField v-model="name" hint="Enter Name" />
             <TextField v-model="gallery" hint="Enter Gallery Name or Company" />
-            <Button :text="textPicture" class="btn btn-primary" marginTop="20" @tap="takePicture"></Button>
+            <Button :text="textPicture" class="btn btn-primary" marginTop="20" @tap="enrollFace"></Button>
             <!-- <Image :src="pictureFromCamera"></Image> -->
-            <Button :text="wtf" class="btn btn-primary" marginTop="20" @tap="apiCall"></Button>
+            <Button :text="wtf" class="btn btn-primary" marginTop="20" @tap="verify"></Button>
         </StackLayout>
 	</Page>
 </template>
@@ -38,6 +38,7 @@ export default {
             pictureFromCamera: null,
             textPicture: "Open Camera",
             pictureBase64String : null,
+            subjectName :null,
             imageFile : null,
             wtf: "Kairos",
             file: null,
@@ -54,7 +55,8 @@ export default {
         };
     },
     methods: {
-        takePicture(){
+
+        enrollFace(){
         camera.requestPermissions();
             camera                
                 .takePicture({ width: 100, height: 100, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
@@ -98,11 +100,56 @@ export default {
                     });
                })    
         },
-        apiCall(){
-            Toast.makeText("Kairos", "long").show();
-            //FacePP
+
+        verify(){
+            
+        camera.requestPermissions();
+            camera                
+                .takePicture({ width: 100, height: 100, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
+                .then(imageAsset => {
+
+                    //Original
+                    this.image = imageAsset.android;
+                    let source = new imageSource.ImageSource();
+                    source.fromAsset(imageAsset).then(source => {
+                    this.pictureBase64String = source.toBase64String('jpeg', 10);
+                    console.log(this.pictureBase64String);
+                    console.log(imageAsset);
+                    // Toast.makeText(this.pictureBase64String, "long").show();
+                   
+
+
+                   //HTTP request HERE
+                   //FacePP
+                            http.request({
+                            url: "https://api.kairos.com/recognize",
+                            method: "POST",
+                            headers: { 
+                                "Content-Type": 'application/json',
+                                "app_id":"463f439a",
+                                "app_key":"759f75c766278af536fbeb4f3dc64363"
+                            },
+                            content: JSON.stringify({
+                                image: this.pictureBase64String,
+                                gallery_name: "My Gallery"
+                            })
+                            }).then(response => {
+                                var result = response.content.toJSON();
+                               
+                                console.log("results starts here");
+                                console.log(JSON.stringify(result.image.subject_id));
+                                // console.log("results ends here");
+                                Toast.makeText("Hi!, "+ result, "long").show();
+                            }, error => {
+                                console.error(error);
+                            }); 
+
+                        //ENDS HERE  
+                    });
+               })    
+        }
            
             }
         }  
-    }
+
 </script>

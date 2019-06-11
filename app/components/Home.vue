@@ -6,7 +6,7 @@
             
             <Button :text="enroll" class="btn btn-primary" marginTop="20" @tap="Enroll"></Button>
             <!-- <Image :src="pictureFromCamera"></Image> -->
-            <Button :text="detect" class="btn btn-primary" marginTop="20" @tap="Detect"></Button>
+            <!-- <Button :text="detect" class="btn btn-primary" marginTop="20" @tap="Detect"></Button> -->
         </StackLayout>
 	</Page>
 </template>
