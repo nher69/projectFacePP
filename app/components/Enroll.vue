@@ -2,7 +2,7 @@
 	<Page class="page" actionBarHidden="true">
 		<ActionBar title="Kairos" class="action-bar"/>
         <StackLayout>
-            <Image class="logo" style="margin-top: 10%;" src="https://illimitadoinc.gallerycdn.vsassets.io/extensions/illimitadoinc/durusthr-shared-codes/0.0.8/1556787561097/Microsoft.VisualStudio.Services.Icons.Default" />
+            <Image class="logo" style="margin-top: 10%;" src="~/res/logo.png" />
             <Label style="text-align: center; margin-top: 50px">
                 <Span text="Powered by: " style="color: yellow; font-size:15px; margin-left: 100px; font-style: italic;"/>
                 <Span text="K A I R O S" style="color: white; font-size: 20px; font-weight: bold;" />
@@ -63,16 +63,16 @@ export default {
         }
         else{ 
         camera.requestPermissions();
-            camera.takePicture({ width: 500, height: 500, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
+            camera.takePicture({ width: 300, height: 300, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
                 .then(imageAsset => {
                     //Original
                     this.image = imageAsset.android;
                     let source = new imageSource.ImageSource();
                     source.fromAsset(imageAsset).then(source => {
-                    this.pictureBase64String = source.toBase64String('jpeg', 100);
+                    this.pictureBase64String = source.toBase64String('jpeg', 50);
                     console.log(this.pictureBase64String);
                     console.log(imageAsset);
-                    Toast.makeText(this.pictureBase64String, "long").show();
+                    // Toast.makeText(this.pictureBase64String, "long").show();
                    
                    //HTTP request HERE
                    //FacePP
@@ -90,10 +90,34 @@ export default {
                                 gallery_name: "testGallery"
                             })
                             }).then(response => {
-                                var result = response.content.toJSON();
-                                // console.log("results starts here");
-                                // console.log(JSON.stringify(result.images));
-                                // console.log("results ends here");
+                                console.log("starts");
+                                var result = JSON.stringify(response.content);
+                                var sample = JSON.parse(result);
+                                var status = sample["images"][0].transaction.status;
+                                console.log(sample["images"][0].transaction.subject_id);
+                                console.log(status);
+                                this.userId = sample["images"][0].transaction.subject_id;
+                                
+                                if(status == 'success'){
+                                    alert({
+                                        title: "Face ID Created!",
+                                        message: "User: " + this.userId ,
+                                        okButtonText: "OK"
+                                    }).then(() => {
+                                        console.log("The user closed the alert.");
+                                        // this.$navigateTo(Dashboard, {clearHistory: true})
+                                    });
+                                }
+                                else{
+                                    alert({
+                                        title: "Alert!",
+                                        message: "Face Detection Failed!",
+                                        okButtonText: "OK"
+                                    }).then(() => {
+                                        console.log("The user closed the alert.");
+                                        
+                                    });
+                                }
                             }, error => {
                                 console.error(error);
                             }); 

@@ -2,7 +2,7 @@
 	<Page class="page" actionBarHidden="true">
 		<ActionBar title="" class="action-bar" />
         <StackLayout>
-            <Image class="logo" style="margin-top: 10%;" src="https://illimitadoinc.gallerycdn.vsassets.io/extensions/illimitadoinc/durusthr-shared-codes/0.0.8/1556787561097/Microsoft.VisualStudio.Services.Icons.Default" />
+            <Image class="logo" style="margin-top: 10%;" src="~/res/logo.png" />
             <Label style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
                 <Span text="Powered by: " style="color: yellow; font-size:15px; margin-left: 100px; font-style: italic;"/>
                 <Span text="K A I R O S" style="color: white; font-size: 20px; font-weight: bold;" />

@@ -3,7 +3,7 @@
 		<ActionBar title="Kairos" class="action-bar" />
         <ActionBar title="Kairos" class="action-bar"/>
         <StackLayout>
-            <Image class="logo" style="margin-top: 10%;" src="https://illimitadoinc.gallerycdn.vsassets.io/extensions/illimitadoinc/durusthr-shared-codes/0.0.8/1556787561097/Microsoft.VisualStudio.Services.Icons.Default" />
+            <Image class="logo" style="margin-top: 10%;" src="~/res/logo.png" />
             <Label style="text-align: center; margin-top: 50px; margin-bottom: 50px;">
                 <Span text="Powered by: " style="color: yellow; font-size:15px; margin-left: 100px; font-style: italic;"/>
                 <Span text="K A I R O S" style="color: white; font-size: 20px; font-weight: bold;" />
@@ -34,6 +34,7 @@ const { alert, confirm, prompt, login, action, inputType } = require("tns-core-m
 export default {
     data() {
         return {
+            userID: '',
             pictureFromCamera: null,
             textPicture: "Open Camera",
             pictureBase64String : null,
@@ -58,12 +59,12 @@ export default {
         },
         detect(){   
             camera.requestPermissions();
-            camera.takePicture({ width: 500, height: 500, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
+            camera.takePicture({ width: 300, height: 300, keepAspectRatio: false, saveToGallery: false, cameraFacing: 'front' })
                 .then(imageAsset => {
                     this.image = imageAsset.android;
                     let source = new imageSource.ImageSource();
                     source.fromAsset(imageAsset).then(source => {
-                    this.pictureBase64String = source.toBase64String('jpeg', 100);
+                    this.pictureBase64String = source.toBase64String('jpeg', 20);
                 
                             http.request({
                             url: "https://api.kairos.com/recognize",
